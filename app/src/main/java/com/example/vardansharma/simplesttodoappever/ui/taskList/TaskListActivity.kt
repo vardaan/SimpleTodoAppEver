@@ -34,7 +34,7 @@ class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateL
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main2)
+        setContentView(R.layout.activity_task_list)
 
         taskList = mutableListOf()
         taskRecyclerView = findViewById(R.id.task_list) as RecyclerView
