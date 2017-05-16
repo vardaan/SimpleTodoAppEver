@@ -35,7 +35,7 @@ class AddTaskDialog : android.support.v4.app.DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         val width = resources.getDimensionPixelSize(R.dimen.popup_width)
         val height = resources.getDimensionPixelSize(R.dimen.popup_height)
-        dialog.window!!.setLayout(width, height)
+        dialog.window?.setLayout(width, height)
         return dialog
     }
 

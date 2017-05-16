@@ -22,15 +22,15 @@ import com.google.firebase.database.FirebaseDatabase
 class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateListener {
     var taskRecyclerView: RecyclerView? = null
 
-    var taskList: MutableList<Task>? = null
+    var taskList: MutableList<Task> = mutableListOf()
 
-    val rootRef = FirebaseDatabase.getInstance()
+    val  rootRef = FirebaseDatabase.getInstance()
 
-    var tasksRef: DatabaseReference? = null
+    lateinit var tasksRef: DatabaseReference
 
-    private var taskAdapter: TaskAdapter? = null
+    private lateinit var taskAdapter: TaskAdapter
 
-    private var user: FirebaseUser? = null
+    private  var user: FirebaseUser? =null
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateL
         taskRecyclerView!!.adapter = taskAdapter
 
         user = FirebaseAuth.getInstance().currentUser
-        val uid = user!!.uid
+        val uid = user?.uid
         tasksRef = rootRef.getReference("users/$uid")
 
 
@@ -54,12 +54,12 @@ class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateL
 
     override fun onResume() {
         super.onResume()
-        tasksRef?.addChildEventListener(childListener)
+        tasksRef.addChildEventListener(childListener)
     }
 
     override fun onPause() {
         super.onPause()
-        tasksRef?.removeEventListener(childListener)
+        tasksRef.removeEventListener(childListener)
     }
 
     private fun handleOnTaskDelted(dataSnapshot: DataSnapshot) {
@@ -74,31 +74,31 @@ class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateL
         }
         when {
             removeIndex != -1 -> {
-                taskList!!.removeAt(removeIndex)
-                taskAdapter!!.notifyItemRemoved(removeIndex)
+                taskList.removeAt(removeIndex)
+                taskAdapter.notifyItemRemoved(removeIndex)
             }
         }
     }
 
     private fun handleOnTaskAdded(dataSnapshot: DataSnapshot) {
         val addedTask = dataSnapshot.getValue(Task::class.java)
-        if (!taskList?.contains(addedTask)!!) {
-            taskList?.add(addedTask)
-            taskAdapter?.notifyItemInserted(taskAdapter?.itemCount?.minus(1) as Int)
+        if (!taskList.contains(addedTask)) {
+            taskList.add(addedTask)
+            taskAdapter.notifyItemInserted(taskAdapter.itemCount.minus(1))
         }
     }
 
     private fun handleOnTaskUpdate(changedTask: Task?) {
-        taskList!!.forEachIndexed { index, (id) ->
+        taskList.forEachIndexed { index, (id) ->
             if (id == changedTask?.id) {
-                taskList!![index] = changedTask
-                taskAdapter!!.notifyItemChanged(index)
+                taskList[index] = changedTask
+                taskAdapter.notifyItemChanged(index)
             }
         }
     }
 
     override fun taskUpdate(task: Task) {
-        tasksRef!!.child(task.id).setValue(task)
+        tasksRef.child(task.id).setValue(task)
     }
 
 
