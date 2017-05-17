@@ -24,13 +24,13 @@ class TaskListActivity : AppCompatActivity(), OnTaskAddedListener, OnTaskUpdateL
 
     var taskList: MutableList<Task> = mutableListOf()
 
-    val  rootRef = FirebaseDatabase.getInstance()
+    val rootRef = FirebaseDatabase.getInstance()
 
     lateinit var tasksRef: DatabaseReference
 
     private lateinit var taskAdapter: TaskAdapter
 
-    private  var user: FirebaseUser? =null
+    private var user: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,11 +145,15 @@ class TaskAdapter(val taskList: List<Task>, val listener: OnTaskUpdateListener) 
 
     override fun onBindViewHolder(holder: TaskAdapter.TaskVH?, position: Int) {
         val task = taskList[position]
-        holder!!.checkbox.isChecked = task.taskDone
-        holder.checkbox.text = task.description
-        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            task.taskDone = isChecked
-            listener.taskUpdate(task)
+        holder?.checkbox.let {
+            if (holder != null) {
+                holder.checkbox.isChecked = task.taskDone
+                holder.checkbox.text = task.description
+                holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+                    task.taskDone = isChecked
+                    listener.taskUpdate(task)
+                }
+            }
         }
     }
 
